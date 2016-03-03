@@ -30,7 +30,6 @@ namespace cshrp_adonet2
                 Console.WriteLine("4.Ta bort (Ange ID)");
                 Console.WriteLine("5.Avsluta");
 
-                
                 int choice = int.Parse(Console.ReadLine().ToString());
                 switch (choice)
                 {
@@ -52,8 +51,8 @@ namespace cshrp_adonet2
                         break;
                     case 4:
                         //4.Ta bort (Ange ID)
-                        sqlRead = "";
-                        p.TaBortProduct(sqlRead, 1);
+                        
+                        p.TaBortProduct(con, 1);
                         break;
                     case 5:
                         //5.Avsluta
@@ -75,24 +74,26 @@ namespace cshrp_adonet2
             }
             Console.ReadLine();            
         }
-
-        private void laggTillNyaProduct(SqlConnection con, string sqlRead, string v1, int v2, int v3, int v4)
+        
+        private void TaBortProduct(SqlConnection con, int PoductID)
         {
-            
-        }
+            string SqlDelete = "DELETE FROM Products WHERE ID = "+ PoductID;
+            SqlCommand command_delete = new SqlCommand(SqlDelete, con);
+            try
+            {
+                int reultat_delete = command_delete.ExecuteNonQuery();
+            }
+            catch (Exception e) {
+                Console.WriteLine("Can't delte!");
+            }finally{
+                con.Close();
+            }
 
-        private void TaBortProduct(string sqlRead, int v)
-        {
-            throw new NotImplementedException();
+            command_delete.Dispose();
         }
-
-        private void UppdateraProduct(string sqlRead, int v, SqlConnection con)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private void visaAlla(String sqlRead, SqlConnection con)
-        {
+        {   
             SqlCommand command_read = new SqlCommand(sqlRead, con);
             SqlDataReader dataReader = command_read.ExecuteReader();
             while (dataReader.Read())
@@ -104,8 +105,19 @@ namespace cshrp_adonet2
                     dataReader["UnitPrice"].ToString()
                 );   //  + " "
             }
+
             dataReader.Close();
             command_read.Dispose();
+        }
+
+        private void laggTillNyaProduct(SqlConnection con, string sqlRead, string v1, int v2, int v3, int v4)
+        {
+
+        }
+
+        private void UppdateraProduct(string sqlRead, int v, SqlConnection con)
+        {
+
         }
     }
 }
